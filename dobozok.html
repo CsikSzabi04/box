@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dobozok</title>
+    <style>
+        body {background-color: cadetblue;}
+        #jatek{
+            width: 1036px; height: 592px;
+            background-color: white;
+            border: 1px solid lightgray;
+            margin: 0px auto;
+            padding: 10px;
+            font-size: 0px;
+        }
+        #jatek img {border: 1px solid white;}
+        #jatek img:hover {border: 1px solid black;}
+        #stat{
+            width: 1036px; margin: 10px auto;
+            font-family: "Comic Sans Ms";
+            font-size: 18pt;
+            font-weight: bold;
+        }
+    </style>
+    <script>
+
+        let kattDb = 0;
+        let maradtDb = 0;
+
+        let t = [];
+        function start(){
+            let html = "";
+            for(let s=0; s<8; s++){
+                t[s] = [];
+                for (let o=0; o<14; o++){
+                    t[s][o] = Math.floor(Math.random()*5+1);
+                    html += "<img id='k"+s+"x"+o+"' src='box"+t[s][o]+".png' onclick='katt("+s+","+o+");'>";
+                    maradtDb++;
+                }
+            }
+            document.getElementById("jatek").innerHTML = html;
+            document.getElementById("maradt").innerHTML = maradtDb;
+        }
+        
+        function katt(s, o){
+            kattDb++; document.getElementById("kattintas").innerHTML = kattDb;
+            let id = t[s][o];
+            if (id != 0){
+                torol(s,o);
+                if(o>0 && t[s][o-1] == id) torol(s,o-1);
+                torol(s,o);
+                if(o>0 && t[s][o-1] == id) torol(s,o-1);
+                if(o<13 && t[s][o+1] == id) torol(s,o+1);
+                if(s<7 && t[s+1][o] == id) torol(s+1,o); 
+            } 
+        }
+
+        function torol(s,o){
+            maradtDb--; document.getElementById("maradt").innerHTML = maradtDb;
+            for(let ss=s; ss>0; ss--){
+                t[ss][o] = t[ss-1][o];
+                document.getElementById("k"+ss+"x"+o).src = "box"+t[ss][o]+".png";
+            }
+            t[0][o] = 0;
+            document.getElementById("k0x" + o).src = "box0.png";
+        }
+
+    </script>
+</head>
+<body onload="start();">
+    
+    <div id="jatek"></div>
+    <div id="stat">
+        Kattintás: <span id="kattintas">0</span>
+        Maradt: <span id="maradt">0</span>
+    </div>    
+
+</body>
+</html>
